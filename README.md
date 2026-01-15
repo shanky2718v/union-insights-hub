@@ -2,7 +2,7 @@
 
 ## Project info
 
-**URL**: 
+**URL**: https://union-insights-hub.vercel.app/
 
 ## How can I edit this code?
 
