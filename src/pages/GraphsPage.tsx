@@ -25,7 +25,8 @@ import {
   ZoomOut,
   RotateCcw,
   FileImage,
-  FileText
+  FileText,
+  Palette
 } from 'lucide-react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import {
@@ -62,16 +63,22 @@ const CHART_TYPES: { value: ChartType; label: string; icon: React.ElementType }[
   { value: 'histogram', label: 'Histogram', icon: BarChart3 },
 ];
 
-const CHART_COLORS = [
-  'hsl(213, 56%, 20%)',   // Primary Navy
-  'hsl(43, 74%, 47%)',    // Gold
-  'hsl(142, 76%, 36%)',   // Success Green
-  'hsl(38, 92%, 50%)',    // Warning Amber
-  'hsl(0, 84%, 60%)',     // Destructive Red
-  'hsl(262, 83%, 58%)',   // Purple
-  'hsl(190, 90%, 50%)',   // Cyan
-  'hsl(340, 82%, 52%)',   // Pink
+const COLOR_PRESETS = [
+  { name: 'Navy', value: 'hsl(213, 56%, 20%)' },
+  { name: 'Gold', value: 'hsl(43, 74%, 47%)' },
+  { name: 'Emerald', value: 'hsl(142, 76%, 36%)' },
+  { name: 'Amber', value: 'hsl(38, 92%, 50%)' },
+  { name: 'Rose', value: 'hsl(0, 84%, 60%)' },
+  { name: 'Purple', value: 'hsl(262, 83%, 58%)' },
+  { name: 'Cyan', value: 'hsl(190, 90%, 50%)' },
+  { name: 'Pink', value: 'hsl(340, 82%, 52%)' },
+  { name: 'Teal', value: 'hsl(172, 66%, 50%)' },
+  { name: 'Indigo', value: 'hsl(234, 89%, 74%)' },
+  { name: 'Orange', value: 'hsl(25, 95%, 53%)' },
+  { name: 'Lime', value: 'hsl(84, 81%, 44%)' },
 ];
+
+const DEFAULT_CHART_COLORS = COLOR_PRESETS.map(c => c.value);
 
 const GraphsPage = () => {
   const { excelData } = useData();
@@ -83,6 +90,13 @@ const GraphsPage = () => {
   const [zoom, setZoom] = useState([100]);
   const [filterMin, setFilterMin] = useState<number | null>(null);
   const [filterMax, setFilterMax] = useState<number | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string>(COLOR_PRESETS[0].value);
+  const [pieColors, setPieColors] = useState<string[]>(DEFAULT_CHART_COLORS.slice(0, 8));
+
+  // Get the active colors for charts
+  const CHART_COLORS = useMemo(() => {
+    return [selectedColor, ...DEFAULT_CHART_COLORS.filter(c => c !== selectedColor)];
+  }, [selectedColor]);
 
   // Get numeric columns for Y-axis
   const numericColumns = useMemo(() => {
@@ -279,7 +293,7 @@ const GraphsPage = () => {
                 label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
               >
                 {chartData.slice(0, 8).map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                  <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
                 ))}
               </Pie>
               <Tooltip 
@@ -308,7 +322,7 @@ const GraphsPage = () => {
                 label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
               >
                 {chartData.slice(0, 8).map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                  <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
                 ))}
               </Pie>
               <Tooltip 
@@ -503,6 +517,60 @@ const GraphsPage = () => {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+
+            {/* Color Customization */}
+            <div className="bank-card p-6">
+              <Label className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+                <Palette className="w-4 h-4" />
+                Chart Color
+              </Label>
+              <div className="grid grid-cols-4 gap-2 mb-4">
+                {COLOR_PRESETS.map((color) => (
+                  <button
+                    key={color.name}
+                    onClick={() => setSelectedColor(color.value)}
+                    title={color.name}
+                    className={`
+                      w-full aspect-square rounded-lg transition-all duration-200 hover:scale-110
+                      ${selectedColor === color.value 
+                        ? 'ring-2 ring-offset-2 ring-primary scale-110' 
+                        : 'hover:ring-2 hover:ring-offset-1 hover:ring-muted-foreground/50'
+                      }
+                    `}
+                    style={{ backgroundColor: color.value }}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground text-center">
+                Selected: {COLOR_PRESETS.find(c => c.value === selectedColor)?.name || 'Custom'}
+              </p>
+              
+              {/* For Pie/Doughnut charts - multi-color selection */}
+              {(selectedChart === 'pie' || selectedChart === 'doughnut') && (
+                <div className="mt-4 pt-4 border-t border-border">
+                  <Label className="text-xs font-medium text-muted-foreground mb-3 block">
+                    Segment Colors (click to cycle)
+                  </Label>
+                  <div className="flex flex-wrap gap-2">
+                    {pieColors.slice(0, Math.min(chartData.length, 8)).map((color, index) => (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          const currentIdx = DEFAULT_CHART_COLORS.indexOf(color);
+                          const nextIdx = (currentIdx + 1) % DEFAULT_CHART_COLORS.length;
+                          const newColors = [...pieColors];
+                          newColors[index] = DEFAULT_CHART_COLORS[nextIdx];
+                          setPieColors(newColors);
+                        }}
+                        title={`Segment ${index + 1} - Click to change`}
+                        className="w-8 h-8 rounded-full transition-all duration-200 hover:scale-110 ring-1 ring-white/50 shadow-md"
+                        style={{ backgroundColor: color }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Zoom Control */}
