@@ -2,8 +2,7 @@
 
 ## Overview
 
-This directory contains the PHP backend API for the Union Bank Data Analytics Portal. Since Lovable is a frontend-only platform, these PHP files are provided as reference implementations for deploying on your own server.
-
+This directory contains the PHP backend API for the Union Bank Data Analytics Portal. These PHP files are provided as reference implementations for deploying on your own server.
 ## Requirements
 
 - PHP 8.0 or higher
@@ -116,8 +115,7 @@ location /api {
 
 ### 4. Connect Frontend to Backend
 
-In your Lovable project, set the `VITE_API_URL` environment variable:
-
+Set the `VITE_API_URL` environment variable:
 ```
 VITE_API_URL=https://your-server.com/api
 ```
