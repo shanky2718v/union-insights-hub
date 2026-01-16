@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Union Bank Design System - Professional Banking Theme */
+/* Union Bank Design System - Professional Banking Theme with Vibrant Colors */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
 
@@ -43,6 +43,22 @@
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
+    /* Info - Blue */
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+
+    /* Vibrant Colors */
+    --violet: 262 83% 58%;
+    --violet-foreground: 0 0% 100%;
+    --cyan: 190 90% 50%;
+    --cyan-foreground: 0 0% 100%;
+    --pink: 340 82% 52%;
+    --pink-foreground: 0 0% 100%;
+    --orange: 25 95% 53%;
+    --orange-foreground: 0 0% 100%;
+    --teal: 168 76% 42%;
+    --teal-foreground: 0 0% 100%;
+
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
@@ -56,9 +72,15 @@
     --gradient-primary: linear-gradient(135deg, hsl(213 56% 20%) 0%, hsl(213 56% 28%) 100%);
     --gradient-gold: linear-gradient(135deg, hsl(43 74% 47%) 0%, hsl(43 74% 55%) 100%);
     --gradient-hero: linear-gradient(180deg, hsl(213 56% 15%) 0%, hsl(213 56% 25%) 100%);
+    --gradient-vibrant: linear-gradient(135deg, hsl(262 83% 58%) 0%, hsl(340 82% 52%) 50%, hsl(25 95% 53%) 100%);
+    --gradient-ocean: linear-gradient(135deg, hsl(199 89% 48%) 0%, hsl(168 76% 42%) 100%);
+    --gradient-sunset: linear-gradient(135deg, hsl(25 95% 53%) 0%, hsl(340 82% 52%) 100%);
+    --gradient-aurora: linear-gradient(135deg, hsl(168 76% 42%) 0%, hsl(262 83% 58%) 50%, hsl(340 82% 52%) 100%);
     --shadow-card: 0 4px 24px -4px rgba(26, 54, 93, 0.08);
     --shadow-elevated: 0 12px 40px -12px rgba(26, 54, 93, 0.15);
     --shadow-gold: 0 4px 20px -4px rgba(201, 162, 39, 0.3);
+    --shadow-glow: 0 0 40px -10px rgba(124, 58, 237, 0.5);
+    --shadow-vibrant: 0 10px 40px -10px rgba(236, 72, 153, 0.4);
 
     /* Sidebar */
     --sidebar-background: 213 56% 15%;
@@ -147,11 +169,77 @@
     background: var(--gradient-hero);
   }
 
+  .gradient-vibrant {
+    background: var(--gradient-vibrant);
+  }
+
+  .gradient-ocean {
+    background: var(--gradient-ocean);
+  }
+
+  .gradient-sunset {
+    background: var(--gradient-sunset);
+  }
+
+  .gradient-aurora {
+    background: var(--gradient-aurora);
+  }
+
   .text-gradient-gold {
     background: var(--gradient-gold);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .text-gradient-vibrant {
+    background: var(--gradient-vibrant);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-aurora {
+    background: var(--gradient-aurora);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .glow-card {
+    @apply relative overflow-hidden;
+  }
+
+  .glow-card::before {
+    content: '';
+    @apply absolute -inset-1 rounded-xl opacity-0 blur-xl transition-opacity duration-500;
+    background: var(--gradient-vibrant);
+  }
+
+  .glow-card:hover::before {
+    @apply opacity-30;
+  }
+
+  .glass-card {
+    @apply backdrop-blur-xl bg-card/80 border border-border/50;
+  }
+
+  .floating-card {
+    @apply transition-all duration-300;
+  }
+
+  .floating-card:hover {
+    transform: translateY(-8px) scale(1.02);
+  }
+
+  .stat-card {
+    @apply relative overflow-hidden;
+  }
+
+  .stat-card::after {
+    content: '';
+    @apply absolute top-0 right-0 w-32 h-32 rounded-full opacity-10 -translate-y-1/2 translate-x-1/2;
+    background: var(--gradient-vibrant);
   }
 }
 
@@ -164,8 +252,46 @@
     animation: slideUp 0.5s ease-out;
   }
 
+  .animate-slide-in-left {
+    animation: slideInLeft 0.5s ease-out;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.5s ease-out;
+  }
+
   .animate-scale-in {
     animation: scaleIn 0.3s ease-out;
+  }
+
+  .animate-bounce-in {
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+    background-size: 200% 100%;
+  }
+
+  .animate-gradient {
+    animation: gradientShift 3s ease infinite;
+    background-size: 200% 200%;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  .animate-spin-slow {
+    animation: spin 3s linear infinite;
+  }
+
+  .animate-counter {
+    animation: countUp 1s ease-out;
   }
 
   @keyframes fadeIn {
@@ -184,6 +310,28 @@
     }
   }
 
+  @keyframes slideInLeft {
+    from { 
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from { 
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
   @keyframes scaleIn {
     from { 
       opacity: 0;
@@ -195,7 +343,81 @@
     }
   }
 
+  @keyframes bounceIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 20px -10px hsl(var(--accent));
+    }
+    to {
+      box-shadow: 0 0 40px -10px hsl(var(--accent));
+    }
+  }
+
+  @keyframes countUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   .animate-pulse-slow {
     animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
+
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
+  .stagger-5 { animation-delay: 0.5s; }
+  .stagger-6 { animation-delay: 0.6s; }
 }
